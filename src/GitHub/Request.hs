@@ -182,7 +182,7 @@ class Accept mt => ParseResponse (mt :: MediaType) a where
     parseResponse :: MonadError Error m => HTTP.Request -> HTTP.Response LBS.ByteString -> Tagged mt (m a)
 
 -------------------------------------------------------------------------------
--- JSON (+ star)
+-- JSON (+ star) / Prev
 -------------------------------------------------------------------------------
 
 -- | Parse API response.
@@ -205,6 +205,12 @@ instance Accept 'MtStar where
     contentType = Tagged "application/vnd.github.v3.star+json"
 
 instance FromJSON a => ParseResponse 'MtStar a where
+    parseResponse _ res = Tagged (parseResponseJSON res)
+
+instance Accept 'MtPrev where
+    contentType = Tagged "application/vnd.github.inertia-preview+json"
+
+instance FromJSON a => ParseResponse 'MtPrev a where
     parseResponse _ res = Tagged (parseResponseJSON res)
 
 -------------------------------------------------------------------------------
